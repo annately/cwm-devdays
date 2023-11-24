@@ -1,0 +1,17 @@
+{
+
+    "endpoints": [
+        {
+            "ip": "10.10.1.0/24",
+            "des": "vpn volvo - main-office endpoints subnet"
+        },
+        {
+            "ip": "10.7.7.0/24",
+            "des": "vpn volvo - branch-office1 endpoints subnet"
+        },
+        {
+            "ip": "10.8.8.0/24",
+            "des": "vpn volvo - branch-office2 endpoints subnet"
+        }
+    ]
+}

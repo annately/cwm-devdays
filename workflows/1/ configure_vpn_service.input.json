@@ -1,0 +1,32 @@
+{
+    "vpn": {
+        "name": "volvo",
+        "rd": "999"
+    },
+    "endpoints": [
+        {
+            "name": "main-office",
+            "ce": "ce6",
+            "int": "GigabitEthernet0/11",
+            "ip": "10.10.1.0/24",
+            "bw": 12000000,
+            "des": "vpn volvo - main-office endpoints subnet"
+        },
+        {
+            "name": "branch-office1",
+            "ce": "ce1",
+            "int": "GigabitEthernet0/11",
+            "ip": "10.7.7.0/24",
+            "bw": 6000000,
+            "des": "vpn volvo - branch-office1 endpoints subnet"
+        },
+        {
+            "name": "branch-office2",
+            "ce": "ce4",
+            "int": "GigabitEthernet0/18",
+            "ip": "10.8.8.0/24",
+            "bw": 300000,
+            "des": "vpn volvo - branch-office2 endpoints subnet"
+        }
+    ]
+}

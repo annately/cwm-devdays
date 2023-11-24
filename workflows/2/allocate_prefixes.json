@@ -1,0 +1,49 @@
+{
+    "id": "Allocate Prefixes-1.0",
+    "name": "Allocate Prefixes",
+    "start": "Allocate",
+    "states": [
+      {
+        "end": true,
+        "name": "Allocate",
+        "type": "foreach",
+        "actions": [
+          {
+            "name": "Set Prefix",
+            "functionRef": {
+              "refName": "REST.Post",
+              "arguments": {
+                "input": {
+                  "data": "${ { prefix: .endpoint.ip, description: .endpoint.des } }",
+                  "path": "api/ipam/prefixes/",
+                  "header": {
+                    "accept": "application/json",
+                    "Content-Type": "application/json"
+                  }
+                },
+                "config": {
+                  "resourceId": "netbox_lab"
+                }
+              }
+            },
+            "actionDataFilter": {
+              "results": "${ if (.data) then .data else { detail:\"not found\" } end }",
+              "toStateData": "${ .prefixRecord }"
+            }
+          }
+        ],
+        "iterationParam": "endpoint",
+        "inputCollection": "${ .endpoints }",
+        "outputCollection": "${ .prefixes }"
+      }
+    ],
+    "version": "1.0",
+    "functions": [
+      {
+        "name": "REST.Post",
+        "operation": "generic.rest.v1.0.1.request.Post"
+      }
+    ],
+    "description": "",
+    "specVersion": "0.8"
+  }

@@ -1,0 +1,46 @@
+{
+  "id": "Allocate Prefixes-2.0",
+  "name": "Allocate Prefixes",
+  "start": "Allocate",
+  "states": [
+    {
+      "end": true,
+      "name": "Allocate",
+      "type": "foreach",
+      "actions": [
+        {
+          "name": "Set Prefix",
+          "functionRef": {
+            "refName": "NETBOX.PostPrefixes",
+            "arguments": {
+              "input": {
+                "data": {
+                  "prefix": "${.endpoint.ip}",
+                  "description": "${.endpoint.des}"
+                }
+              },
+              "config": {
+                "resourceId": "netbox_lab"
+              }
+            },
+          "actionDataFilter": {
+            "results": "${ if (.data) then .data else { detail:\"not found\" } end }",
+            "toStateData": "${ .prefixRecord }"
+          }
+        }}
+      ],
+      "iterationParam": "endpoint",
+      "inputCollection": "${ .endpoints }",
+      "outputCollection": "${ .prefixes }"
+    }
+  ],
+  "version": "2.0",
+  "functions": [
+    {
+      "name": "NETBOX.PostPrefixes",
+      "operation": "netbox.oasx.v1.0.0.ipam.PostPrefixes"
+    }
+  ],
+  "description": "",
+  "specVersion": "0.8"
+}

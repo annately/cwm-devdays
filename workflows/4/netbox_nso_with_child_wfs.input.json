@@ -1,0 +1,35 @@
+{
+    "vpn": {
+        "name": "ford",
+        "rd": "777"
+    },
+    "endpoints": [
+        {
+            "name": "main-office",
+            "ce": "ce2",
+            "int": "GigabitEthernet0/5",
+            "ip": "192.168.1.0/24",
+            "bw": 10000000,
+            "des": "vpn ford - main-office endpoints subnet"
+        },
+        {
+            "name": "branch-office1",
+            "ce": "ce3",
+            "int": "GigabitEthernet0/5",
+            "ip": "192.168.2.0/24",
+            "bw": 5500000,
+            "des": "vpn ford - branch-office1 endpoints subnet"
+        },
+        {
+            "name": "branch-office2",
+            "ce": "ce5",
+            "int": "GigabitEthernet0/5",
+            "ip": "192.168.7.0/24",
+            "bw": 1500000,
+            "des": "vpn ford - branch-office2 endpoints subnet"
+        }
+    ],
+    "webex": {
+        "roomId": "Y2lzY29zcGFyazovL3VzL1JPT00vYWEyZjk5MDAtOTA3YS0xMWVlLThmYzUtMTNhNDZiYWE5YzQ2"
+      }
+}
