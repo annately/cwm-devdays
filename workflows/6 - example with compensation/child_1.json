@@ -1,0 +1,113 @@
+{
+    "id": "Allocate Prefixes-1.0",
+    "name": "Allocate Prefixes",
+    "start": "Allocate",
+    "errors": [
+      {
+        "code": "HTTP_STATUS_500",
+        "name": "Error while allocating prefixes",
+        "description": "Unable to allocate Prefixes"
+      }
+    ],
+    "states": [
+      {
+        "end": true,
+        "name": "Allocate",
+        "type": "foreach",
+        "actions": [
+          {
+            "name": "Set Prefix",
+            "functionRef": {
+              "refName": "REST.Post",
+              "arguments": {
+                "input": {
+                  "data": "${ { prefix: .endpoint.ip, description: .endpoint.des } }",
+                  "path": "api/ipam/prefixes/",
+                  "header": {
+                    "accept": "application/json",
+                    "Content-Type": "application/json"
+                  }
+                },
+                "config": {
+                  "resourceId": "netbox_lab"
+                }
+              }
+            },
+            "actionDataFilter": {
+              "results": "${ if (.data) then .data else { detail:\"not found\" } end }"
+            },
+            "nonRetryableErrors": [
+              "Error while allocating prefixes"
+            ]
+          }
+        ],
+        "onErrors": [
+          {
+            "end": {
+              "compensate": true
+            },
+            "errorRef": "Error while allocating prefixes"
+          }
+        ],
+        "compensatedBy": "DeleteAllAllocatedPrefixes",
+        "iterationParam": "endpoint",
+        "inputCollection": "${ .endpoints }",
+        "outputCollection": "${ .allocatedPrefixes }"
+      },
+      {
+        "name": "DeleteAllAllocatedPrefixes",
+        "type": "foreach",
+        "actions": [
+          {
+            "name": "Delete prefix",
+            "functionRef": {
+              "refName": "REST.Delete",
+              "arguments": {
+                "input": {
+                  "data": "${ [ { id: .allocPrefix.id } ] }",
+                  "path": "api/ipam/prefixes/",
+                  "header": {
+                    "accept": "application/json",
+                    "Content-Type": "application/json"
+                  }
+                },
+                "config": {
+                  "resourceId": "netbox_lab"
+                }
+              }
+            },
+            "actionDataFilter": {
+              "results": "${  if (.status==204) then { prefix: .allocPrefix.prefix, status: \"Deleted\" } else { prefix: .allocPrefix.prefix, status:\"NotDeleted\", code: .status } end  }",
+              "toStateData": "${ .deletedStatus }"
+            }
+          }
+        ],
+        "transition": "CleanUp and Finish",
+        "iterationParam": "allocPrefix",
+        "inputCollection": "${ .allocatedPrefixes }",
+        "outputCollection": "${ .deletedPrefixes }",
+        "usedForCompensation": true
+      },
+      {
+        "data": {
+          "terminate": true
+        },
+        "name": "CleanUp and Finish",
+        "type": "inject",
+        "usedForCompensation": true
+      }
+    ],
+    "version": "1.0",
+    "functions": [
+      {
+        "name": "REST.Post",
+        "operation": "generic.rest.v1.0.1.request.Post"
+      },
+      {
+        "name": "REST.Delete",
+        "operation": "generic.rest.v1.0.1.request.Delete"
+      }
+    ],
+    "description": "",
+    "specVersion": "0.8"
+  }

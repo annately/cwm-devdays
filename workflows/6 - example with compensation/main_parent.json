@@ -1,0 +1,161 @@
+{
+    "id": "Netbox and NSO 1.0",
+    "name": "Netbox and NSO",
+    "start": "AllocatePrefixes",
+    "states": [
+      {
+        "name": "AllocatePrefixes",
+        "type": "operation",
+        "actions": [
+          {
+            "name": "Run Allocate Prefixes Workflow",
+            "retryRef": "Default",
+            "subflowRef": {
+              "version": "1.0",
+              "workflowId": "Allocate Prefixes"
+            }
+          }
+        ],
+        "transition": "CheckStatus"
+      },
+      {
+        "name": "CheckStatus",
+        "type": "switch",
+        "dataConditions": [
+          {
+            "condition": "${ .terminate == true }",
+            "transition": "ReportOnWebX"
+          }
+        ],
+        "defaultCondition": {
+          "transition": "SyncFrom"
+        }
+      },
+      {
+        "name": "SyncFrom",
+        "type": "operation",
+        "actions": [
+          {
+            "name": "SyncFrom",
+            "retryRef": "Default",
+            "functionRef": {
+              "refName": "NSO.RestconfPost",
+              "arguments": {
+                "input": {
+                  "path": "restconf/operations/tailf-ncs:devices/sync-from"
+                },
+                "config": {
+                  "resourceId": "NSOLocal"
+                }
+              }
+            },
+            "actionDataFilter": {
+              "results": "${ if .data then .data.\"tailf-ncs:output\" else null end }",
+              "toStateData": "${ .syncFromResult }"
+            }
+          }
+        ],
+        "transition": {
+          "nextState": "CreateVPN"
+        }
+      },
+      {
+        "name": "CreateVPN",
+        "type": "operation",
+        "actions": [
+          {
+            "name": "CreateVPN",
+            "retryRef": "Custom",
+            "functionRef": {
+              "refName": "NSO.RestconfPost",
+              "arguments": {
+                "input": {
+                  "data": "${ { l3vpn:[{name: .vpn.name, \"route-distinguisher\": .vpn.rd }] } }",
+                  "path": "restconf/data/l3vpn:vpn"
+                },
+                "config": {
+                  "resourceId": "NSOLocal"
+                }
+              }
+            },
+            "actionDataFilter": {
+              "results": "${ if (.status) then .status else null end }",
+              "toStateData": "${ .createServiceResult }"
+            }
+          }
+        ],
+        "transition": "ConfigureEndpoints"
+      },
+      {
+        "name": "ConfigureEndpoints",
+        "type": "operation",
+        "actions": [
+          {
+            "name": "ConfigureEndpoint",
+            "retryRef": "Custom",
+            "subflowRef": {
+              "version": "1.0",
+              "workflowId": "Configure Endpoints"
+            }
+          }
+        ],
+        "transition": "ReportOnWebX"
+      },
+      {
+        "end": true,
+        "name": "ReportOnWebX",
+        "type": "operation",
+        "actions": [
+          {
+            "name": "Report",
+            "retryRef": "Custom",
+            "subflowRef": {
+              "version": "1.0",
+              "workflowId": "Webex"
+            }
+          }
+        ]
+      }
+    ],
+    "retries": [
+      {
+        "name": "Default",
+        "delay": "PT30S",
+        "multiplier": 1,
+        "maxAttempts": 2
+      },
+      {
+        "name": "Custom",
+        "delay": "PT10S",
+        "multiplier": 1,
+        "maxAttempts": 2
+      }
+    ],
+    "version": "1.0",
+    "functions": [
+      {
+        "name": "REST.Post",
+        "operation": "generic.rest.v1.0.1.request.Post"
+      },
+      {
+        "name": "REST.Delete",
+        "operation": "generic.rest.v1.0.1.request.Delete"
+      },
+      {
+        "name": "NSO.RestconfPost",
+        "metadata": {
+          "worker": "cisco.nso.v1.0.1"
+        },
+        "operation": "cisco.nso.v1.0.1.restconf.Post"
+      },
+      {
+        "name": "NSO.RestconfPut",
+        "metadata": {
+          "worker": "cisco.nso.v1.0.1"
+        },
+        "operation": "cisco.nso.v1.0.1.restconf.Put"
+      }
+    ],
+    "description": "",
+    "specVersion": "0.9"
+  }

@@ -1,0 +1,67 @@
+{
+    "id": "Webex-1.0",
+    "name": "Webex",
+    "start": "PostOnWebX",
+    "states": [
+      {
+        "end": true,
+        "name": "PostOnWebX",
+        "type": "operation",
+        "actions": [
+          {
+            "name": "Post Message",
+            "functionRef": {
+              "refName": "REST.Post",
+              "arguments": {
+                "input": {
+                  "data": "${ { roomId: .webex.roomId,  text: \"Workflow completed\" } }",
+                  "path": "v1/messages/",
+                  "header": {
+                    "accept": "application/json",
+                    "Content-Type": "application/json"
+                  }
+                },
+                "config": {
+                  "resourceId": "webex_room"
+                }
+              }
+            },
+            "actionDataFilter": {
+              "toStateData": "${ .webexResponse }"
+            }
+          },
+          {
+            "name": "Post Message",
+            "functionRef": {
+              "refName": "REST.Post",
+              "arguments": {
+                "input": {
+                  "data": "${ { roomId: .webex.roomId,  text: (if .terminate==true then \"Status : Failed\" else \"Status : Success\" end  ) } }",
+                  "path": "v1/messages/",
+                  "header": {
+                    "accept": "application/json",
+                    "Content-Type": "application/json"
+                  }
+                },
+                "config": {
+                  "resourceId": "webex_room"
+                }
+              }
+            },
+            "actionDataFilter": {
+              "toStateData": "${ .webexResponse }"
+            }
+          }
+        ]
+      }
+    ],
+    "version": "1.0",
+    "functions": [
+      {
+        "name": "REST.Post",
+        "operation": "generic.rest.v1.0.1.request.Post"
+      }
+    ],
+    "description": "",
+    "specVersion": "0.8"
+  }

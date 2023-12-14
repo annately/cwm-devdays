@@ -1,0 +1,45 @@
+{
+    "id": "Configure-1.0",
+    "name": "Configure Endpoints",
+    "start": "ConfigureEndpoints",
+    "states": [
+      {
+        "end": true,
+        "name": "ConfigureEndpoints",
+        "type": "foreach",
+        "actions": [
+          {
+            "name": "ConfigureEndpoint",
+            "functionRef": {
+              "refName": "NSO.RestconfPost",
+              "arguments": {
+                "input": {
+                  "data": "${ {endpoint: { id: .endpoint.name, \"ce-device\": .endpoint.ce, \"ce-interface\": .endpoint.int, \"ip-network\": .endpoint.ip ,bandwidth: .endpoint.bw }}}",
+                  "path": "restconf/data/l3vpn:vpn/l3vpn=volvo"
+                },
+                "config": {
+                  "resourceId": "NSOLocal"
+                }
+              }
+            },
+            "actionDataFilter": {
+              "results": "${ if .status then .status else null end }",
+              "toStateData": "${ .createServiceResult }"
+            }
+          }
+        ],
+        "iterationParam": "endpoint",
+        "inputCollection": "${ .endpoints }",
+        "outputCollection": "${ .endpointsConfigureResponses }"
+      }
+    ],
+    "version": "1.0",
+    "functions": [
+      {
+        "name": "NSO.RestconfPost",
+        "operation": "cisco.nso.v1.0.1.restconf.Post"
+      }
+    ],
+    "description": "",
+    "specVersion": "0.8"
+  }

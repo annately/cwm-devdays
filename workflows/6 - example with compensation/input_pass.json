@@ -1,0 +1,35 @@
+{
+    "endpoints": [
+      {
+        "bw": 12000000,
+        "ce": "ce6",
+        "des": "main-office endpoints subnet",
+        "int": "GigabitEthernet0/11",
+        "ip": "10.10.1.0/24",
+        "name": "main-office"
+      },
+      {
+        "bw": 6000000,
+        "ce": "ce1",
+        "des": "branch-office1 endpoints subnet",
+        "int": "GigabitEthernet0/11",
+        "ip": "10.7.7.0/24",
+        "name": "branch-office1"
+      },
+      {
+        "bw": 300000,
+        "ce": "ce4",
+        "des": "branch-office2 endpoints subnet",
+        "int": "GigabitEthernet0/18",
+        "ip": "10.8.8.0/24",
+        "name": "branch-office2"
+      }
+    ],
+    "vpn": {
+      "name": "volvo",
+      "rd": "999"
+    },
+    "webex": {
+      "roomId": "XXXXX"
+    }
+  } 
