@@ -182,7 +182,7 @@ Endpoint information, as well as vpn name and RD, comes as an [input](workflows/
 
 
 
-<img src='workflows/1/ configure_vpn_service.svg' width='300'>
+<img src='workflows/1/configure_vpn_service.svg' width='300'>
 
 Please find workflow complete JSON file [here](workflows/1/configure_vpn_service.json).
 
