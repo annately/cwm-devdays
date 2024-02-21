@@ -54,7 +54,7 @@ In this repository you can find examples of workflows towards NSO and Netbox, as
   - CWM XDK
 - **NSO** local install
 - **Netbox** instance
-- **Webex** account <-Extra if I have time #TODO
+- **Webex** account
 
 
 ## Part 1 - Workflows
