@@ -1,3 +1,6 @@
+[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/annately/cwm-devdays)
+[![Run in Cisco Cloud IDE](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-runable-icon.svg)](https://developer.cisco.com/codeexchange/devenv/annately/cwm-devdays/)
+
 <p align="center">
   <a>
     <img src="images/detective-cwm.png" alt="CWM">
@@ -546,4 +549,6 @@ Please find example of [allocate_prefixes](workflows/2/allocate_prefixes.json) w
 ## Resources
 
 
-Enjoy :metal:
+Enjoy!
+
+
